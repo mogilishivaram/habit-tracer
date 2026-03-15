@@ -17,6 +17,7 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [formError, setFormError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const strength = getStrength(password);
 
@@ -74,13 +75,31 @@ const Register: React.FC = () => {
           </div>
           <div>
             <label className="text-xs font-medium text-slate-600 dark:text-slate-400">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-sm"
-              placeholder="Create a password"
-            />
+            <div style={{ position: 'relative' }}>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="mt-1 w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-sm"
+                placeholder="Create a password"
+              />
+              <span
+                onMouseEnter={() => setShowPassword(true)}
+                onMouseLeave={() => setShowPassword(false)}
+                style={{
+                  position: 'absolute',
+                  right: '12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  cursor: 'pointer',
+                  userSelect: 'none',
+                  fontSize: '16px',
+                }}
+                aria-label="Show password"
+              >
+                eye
+              </span>
+            </div>
             <p className="text-[11px] text-slate-500 mt-1">Strength: {strength}</p>
           </div>
           <div>
