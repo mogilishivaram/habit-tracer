@@ -65,11 +65,12 @@ const Login: React.FC = () => {
                   transform: 'translateY(-50%)',
                   cursor: 'pointer',
                   userSelect: 'none',
-                  fontSize: '16px',
+                  fontSize: '20px',
+                  lineHeight: 1,
                 }}
                 aria-label="Show password"
               >
-                eye
+                {showPassword ? '🐵' : '🙈'}
               </span>
             </div>
           </div>

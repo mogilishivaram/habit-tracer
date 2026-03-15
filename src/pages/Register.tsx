@@ -93,11 +93,12 @@ const Register: React.FC = () => {
                   transform: 'translateY(-50%)',
                   cursor: 'pointer',
                   userSelect: 'none',
-                  fontSize: '16px',
+                  fontSize: '20px',
+                  lineHeight: 1,
                 }}
                 aria-label="Show password"
               >
-                eye
+                {showPassword ? '🐵' : '🙈'}
               </span>
             </div>
             <p className="text-[11px] text-slate-500 mt-1">Strength: {strength}</p>
