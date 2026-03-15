@@ -13,22 +13,22 @@ router.post('/', authMiddleware, async (req, res) => {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    const dateObj = new Date(date);
-    dateObj.setHours(0, 0, 0, 0);
-
+    const incomingDate = new Date(date);
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
 
-    if (dateObj.getTime() !== today.getTime()) {
+    const incomingStr = incomingDate.toISOString().split('T')[0];
+    const todayStr = today.toISOString().split('T')[0];
+
+    if (incomingStr !== todayStr) {
       return res.status(403).json({
         error: 'Can only edit completions for today',
         attemptedDate: date,
-        today: today.toISOString().split('T')[0],
+        today: todayStr,
       });
     }
 
     const completion = await Completion.findOneAndUpdate(
-      { userId: req.userId, habitId, date: dateObj },
+      { userId: req.userId, habitId, date: incomingDate },
       { completed, updatedAt: Date.now() },
       { new: true, upsert: true }
     );
