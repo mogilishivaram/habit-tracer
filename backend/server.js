@@ -12,7 +12,13 @@ const app = express();
 
 // Middleware
 app.use(helmet());
-const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:5173')
+const defaultOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5176',
+  'https://habit-tracer-seven.vercel.app',
+];
+
+const allowedOrigins = (process.env.FRONTEND_URL || defaultOrigins.join(','))
   .split(',')
   .map((origin) => origin.trim());
 
