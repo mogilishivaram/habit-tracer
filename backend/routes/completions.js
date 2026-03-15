@@ -14,18 +14,6 @@ router.post('/', authMiddleware, async (req, res) => {
     }
 
     const incomingDate = new Date(date);
-    const today = new Date();
-
-    const incomingStr = incomingDate.toISOString().split('T')[0];
-    const todayStr = today.toISOString().split('T')[0];
-
-    if (incomingStr !== todayStr) {
-      return res.status(403).json({
-        error: 'Can only edit completions for today',
-        attemptedDate: date,
-        today: todayStr,
-      });
-    }
 
     const completion = await Completion.findOneAndUpdate(
       { userId: req.userId, habitId, date: incomingDate },

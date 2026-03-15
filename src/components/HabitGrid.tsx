@@ -20,30 +20,22 @@ interface CheckboxCellProps {
   checked: boolean;
   onClick: () => void;
   label: string;
-  disabled: boolean;
-  title?: string;
 }
 
-const CheckboxCell: React.FC<CheckboxCellProps> = ({ checked, onClick, label, disabled, title }) => (
+const CheckboxCell: React.FC<CheckboxCellProps> = ({ checked, onClick, label }) => (
   <td className="p-0">
     <button
       aria-label={label}
       aria-pressed={checked}
-      aria-disabled={disabled}
-      data-disabled={disabled ? 'true' : 'false'}
       onClick={onClick}
-      disabled={disabled}
-      title={title}
       className={`
         w-7 h-7 flex items-center justify-center rounded
         border transition-all duration-200 ease-in-out
         focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1
-        ${disabled ? 'opacity-60 cursor-not-allowed' : ''}
         ${checked
           ? 'bg-blue-500 dark:bg-blue-400 border-blue-500 dark:border-blue-400 text-white scale-100'
           : 'bg-transparent border-slate-300 dark:border-slate-600 hover:border-blue-400 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-slate-700'
         }
-        ${disabled ? 'hover:border-slate-300 hover:bg-transparent dark:hover:border-slate-600 dark:hover:bg-transparent' : ''}
       `}
     >
       {checked && (
@@ -98,15 +90,11 @@ const HabitGrid: React.FC<HabitGridProps> = ({
   saving,
 }) => {
   const handleToggle = useCallback(
-    (habitId: string, day: number, editable: boolean) => () => {
-      if (!editable) return;
+    (habitId: string, day: number) => () => {
       onToggle(habitId, day);
     },
     [onToggle]
   );
-
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
 
   return (
     <div className="w-full overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700">
@@ -140,20 +128,13 @@ const HabitGrid: React.FC<HabitGridProps> = ({
             {weeks.flatMap((week) =>
               week.days.map((day) => {
                 const dayOfWeek = new Date(year, monthIndex, day).getDay();
-                const cellDate = new Date(year, monthIndex, day);
-                cellDate.setHours(0, 0, 0, 0);
-                const isToday = cellDate.getTime() === today.getTime();
                 return (
                   <th
                     key={day}
                     className="px-0.5 py-1 text-center text-[10px] font-medium text-slate-400 dark:text-slate-500 min-w-[28px]"
                   >
-                    <div className={isToday ? 'text-blue-500 dark:text-blue-400 font-semibold' : ''}>
-                      {dayLabels[dayOfWeek]}
-                    </div>
-                    <div className={`font-semibold text-xs ${isToday ? 'text-blue-500 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300'}`}>
-                      {day}
-                    </div>
+                    <div>{dayLabels[dayOfWeek]}</div>
+                    <div className="font-semibold text-slate-600 dark:text-slate-300 text-xs">{day}</div>
                   </th>
                 );
               })
@@ -185,27 +166,12 @@ const HabitGrid: React.FC<HabitGridProps> = ({
                 {/* Checkbox cells */}
                 {weeks.flatMap((week) =>
                   week.days.map((day) => (
-                    (() => {
-                      const cellDate = new Date(year, monthIndex, day);
-                      cellDate.setHours(0, 0, 0, 0);
-                      const isToday = cellDate.getTime() === today.getTime();
-                      const disabled = !isToday || !!saving[`${habit._id}-${day}`];
-                      const title = isToday
-                        ? 'Today'
-                        : cellDate < today
-                          ? 'Past days are locked'
-                          : "This day hasn't arrived yet";
-                      return (
                     <CheckboxCell
                       key={day}
                       checked={!!completions[habit._id]?.[day]}
-                      onClick={handleToggle(habit._id, day, isToday)}
+                      onClick={handleToggle(habit._id, day)}
                       label={`${habit.name} – day ${day}`}
-                      disabled={disabled}
-                      title={title}
                     />
-                      );
-                    })()
                   ))
                 )}
 
