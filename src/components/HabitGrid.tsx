@@ -87,7 +87,7 @@ const HabitGrid: React.FC<HabitGridProps> = ({
   year,
   monthIndex,
   onToggle,
-  saving,
+  // saving prop is passed but not used in this component
 }) => {
   const handleToggle = useCallback(
     (habitId: string, day: number) => () => {
